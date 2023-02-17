@@ -21,25 +21,31 @@ class InterceptorTest {
     private final PrintStream originalErr = System.err;
     @BeforeEach
     public void setup() {
+        // Create Dispatcher and Customer before test begins
         dispatcher = new Dispatcher();
         customer = new Customer("iJoshie", dispatcher);
+        // Set output stream to print stream to allow for string asserts
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
     }
 
     @Test
     public void interceptionTest() {
+        // Create Movie object without any interceptors
         Movie movie = new Movie("Bad Teacher", 0, dispatcher);
         assertEquals("", outContent.toString());
 
+        // Add rental to customer without any interceptors
         customer.addRental(new Rental(movie, 7));
         assertEquals("", outContent.toString());
 
+        // Add interceptors to dispatcher
         Interceptor logger = new LoggingInterceptor();
         Interceptor advertiser = new AdvertisingInterceptor();
         dispatcher.register(advertiser);
         dispatcher.register(logger);
 
+        // Create Movie with both interceptors present
         Movie movie2 = new Movie("Devil wears Prada", 1, dispatcher);
         String prevOut = outContent.toString().replaceAll("\\r\\n?", "\n");
         assertEquals("""
@@ -49,6 +55,7 @@ class InterceptorTest {
                 After processing request: Response for setPriceCode
                 """, prevOut);
 
+        // Add rental with both interceptors present
         customer.addRental(new Rental(movie2, 14));
         assertEquals(prevOut + """
                 Before processing request: addRental
