@@ -10,12 +10,11 @@ public class Movie {
     public static final int NEW_RELEASE = 1;
 
     private String title;
-    private Dispatcher dispatcher;
+    private Dispatcher dispatcher = Dispatcher.getInstance();
     Price price;
 
-    public Movie(String title, int priceCode, Dispatcher dispatcher) {
+    public Movie(String title, int priceCode) {
         this.title = title;
-        this.dispatcher = dispatcher;
         setPriceCode(priceCode);
     }
 

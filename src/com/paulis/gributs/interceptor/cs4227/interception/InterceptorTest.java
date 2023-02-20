@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InterceptorTest {
     private Customer customer;
-    private Dispatcher dispatcher;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -22,8 +21,7 @@ class InterceptorTest {
     @BeforeEach
     public void setup() {
         // Create Dispatcher and Customer before test begins
-        dispatcher = new Dispatcher();
-        customer = new Customer("iJoshie", dispatcher);
+        customer = new Customer("iJoshie");
         // Set output stream to print stream to allow for string asserts
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
@@ -32,7 +30,7 @@ class InterceptorTest {
     @Test
     public void interceptionTest() {
         // Create Movie object without any interceptors
-        Movie movie = new Movie("Bad Teacher", 0, dispatcher);
+        Movie movie = new Movie("Bad Teacher", 0);
         assertEquals("", outContent.toString());
 
         // Add rental to customer without any interceptors
@@ -42,11 +40,12 @@ class InterceptorTest {
         // Add interceptors to dispatcher
         Interceptor logger = new LoggingInterceptor();
         Interceptor advertiser = new AdvertisingInterceptor();
+        Dispatcher dispatcher = Dispatcher.getInstance();
         dispatcher.register(advertiser);
         dispatcher.register(logger);
 
         // Create Movie with both interceptors present
-        Movie movie2 = new Movie("Devil wears Prada", 1, dispatcher);
+        Movie movie2 = new Movie("Devil wears Prada", 1);
         String prevOut = outContent.toString().replaceAll("\\r\\n?", "\n");
         assertEquals("""
                 Thank you for purchasing from our store!

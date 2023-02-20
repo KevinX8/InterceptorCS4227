@@ -10,11 +10,10 @@ public class Customer {
 
     private String name;
     private List<Rental> rentals = new ArrayList<Rental>();
-    private Dispatcher dispatcher;
+    private Dispatcher dispatcher = Dispatcher.getInstance();
 
-    public Customer(String name, Dispatcher dispatcher) {
+    public Customer(String name) {
         this.name = name;
-        this.dispatcher = dispatcher;
     }
 
     public String getName() {
